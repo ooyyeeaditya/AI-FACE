@@ -1,0 +1,53 @@
+{
+  "name": "AI Based Fake Identity & Document Screening System",
+  "short_name": "DocScreen AI",
+  "description": "Universal Border Checkpoint Document Screening & Verification System (MEA / UIDAI / BOI India)",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/static/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["security", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Screen Document",
+      "short_name": "Screen",
+      "description": "Upload and verify passport, visa, or Aadhaar",
+      "url": "/#verify",
+      "icons": [{ "src": "/static/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Register Record",
+      "short_name": "Register",
+      "description": "Register genuine document in issuance database",
+      "url": "/#register",
+      "icons": [{ "src": "/static/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}

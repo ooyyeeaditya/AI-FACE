@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Based Fake Identity & Document Screening System — MEA / UIDAI / BOI</title>
+  
+  <!-- Typography: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Progressive Web App (PWA) Meta & Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DocScreen AI">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/static/icons/icon-96x96.png">
+
+  <style>
+    /* ==========================================================================
+       CLEAN LIGHT THEME — AI BASED FAKE IDENTITY & DOCUMENT SCREENING SYSTEM
+       Crisp White Surfaces • Refined Border Radii • High Contrast Typography
+       ========================================================================== */
+    :root {
+      --primary-blue: #2563eb;
+      --primary-blue-hover: #1d4ed8;
+      --primary-blue-light: #eff6ff;
+      --primary-blue-border: #bfdbfe;
+
+      --accent-teal: #0d9488;
+      --accent-mint: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #ef4444;
+
+      /* Surfaces */
+      --bg-canvas: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-border-subtle: #edf2f7;
+      --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+
+      /* Typography */
+      --text-heading: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+
+      /* Decision Banners */
+      --verdict-green-bg: #f0fdf4;
+      --verdict-green-border: #bbf7d0;
+      --verdict-green-text: #15803d;
+
+      --verdict-yellow-bg: #fffbeb;
+      --verdict-yellow-border: #fde68a;
+      --verdict-yellow-text: #b45309;
+
+      --verdict-red-bg: #fef2f2;
+      --verdict-red-border: #fecaca;
+      --verdict-red-text: #b91c1c;
+
+      --verdict-neutral-bg: #f8fafc;
+      --verdict-neutral-border: #e2e8f0;
+      --verdict-neutral-text: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-body);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Bar */
+    .light-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 28px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .brand-shield-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: var(--text-heading);
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    .telemetry-chip {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 9999px;
+      padding: 3px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #16a34a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-dot-green {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 6px #16a34a;
+      animation: live-pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.3); }
+    }
+
+    /* Cards & Containers */
+    .light-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.2s ease;
+    }
+
+    .light-card-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--card-border-subtle);
+      padding: 16px 20px;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-heading);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn-pill-action {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 9999px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 11px 24px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-pill-action:hover, .btn-pill-action:focus {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.38);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn-pill-nav {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      color: var(--text-body);
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 8px 18px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    .btn-pill-nav:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    /* Form Controls */
+    .form-control-light, .form-select-light {
+      background-color: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: #1e293b;
+      font-size: 0.84rem;
+      padding: 9px 13px;
+      transition: all 0.2s ease;
+    }
+
+    .form-control-light:focus, .form-select-light:focus {
+      background-color: #ffffff;
+      border-color: var(--primary-blue);
+      color: #0f172a;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      outline: none;
+    }
+
+    .form-label-light {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    /* Specimen Buttons */
+    .specimen-btn {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: #334155;
+      padding: 10px 14px;
+      margin-bottom: 7px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .specimen-btn:hover {
+      background: #f8fafc;
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+      transform: translateX(2px);
+    }
+
+    .specimen-btn.active {
+      background: #eff6ff;
+      border-color: var(--primary-blue);
+      color: #1d4ed8;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+    }
+
+    /* Verdict HUD */
+    .hud-light-card {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .score-value-big {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      color: var(--primary-blue);
+    }
+
+    .verdict-banner {
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.94rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .verdict-neutral {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    .verdict-green {
+      background: var(--verdict-green-bg);
+      border: 1px solid var(--verdict-green-border);
+      color: var(--verdict-green-text);
+    }
+
+    .verdict-yellow {
+      background: var(--verdict-yellow-bg);
+      border: 1px solid var(--verdict-yellow-border);
+      color: var(--verdict-yellow-text);
+    }
+
+    .verdict-red {
+      background: var(--verdict-red-bg);
+      border: 1px solid var(--verdict-red-border);
+      color: var(--verdict-red-text);
+    }
+
+    /* Clean Tabs */
+    .light-tabs {
+      background: #ffffff;
+      padding: 0 8px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .light-tabs .nav-link {
+      color: #64748b;
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      transition: all 0.2s ease;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .light-tabs .nav-link:hover {
+      color: #0f172a;
+    }
+
+    .light-tabs .nav-link.active {
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+      font-weight: 700;
+      background: transparent;
+    }
+
+    /* VIZ Table */
+    .table-viz-clean {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+    }
+
+    .table-viz-clean th {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-right: none;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      width: 40%;
+    }
+
+    .table-viz-clean td {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: none;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 0.84rem;
+      padding: 10px 14px;
+    }
+
+    .table-viz-clean tr:hover th {
+      background: #f1f5f9;
+    }
+
+    .table-viz-clean tr:hover td {
+      background: #f8fafc;
+    }
+
+    /* Terminal MRZ Container */
+    .mrz-terminal-clean {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.02rem;
+      letter-spacing: 2px;
+      padding: 16px;
+      border-radius: 12px;
+      line-height: 1.7;
+      word-break: break-all;
+    }
+
+    /* Previews & Heatmaps */
+    .preview-box-dashed {
+      background-color: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+
+    .heatmap-clean-img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      min-height: 130px;
+      object-fit: contain;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .heatmap-clean-img:hover {
+      transform: scale(1.02);
+      border-color: #2563eb;
+    }
+
+    /* Pill Badges */
+    .badge-pill-soft {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    /* Quick Stat Box */
+    .quick-stat-light {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .quick-stat-light:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .quick-stat-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #64748b;
+    }
+
+    .quick-stat-val {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Modal */
+    .modal-content-light {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ==========================================================================
+       MAHATMA GANDHI INTRO SPLASH OVERLAY (MATCHING USER REFERENCE IMAGE)
+       ========================================================================== */
+    #gandhiIntroOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .gandhi-modal-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25);
+      padding: 36px 44px;
+      max-width: 660px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .gandhi-art-box {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px auto;
+      border-radius: 20px;
+      border: 2px solid #bfdbfe;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .gandhi-quote-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #1e293b;
+      font-weight: 500;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .gandhi-author-text {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.4px;
+    }
+
+    .intro-progress-bar-light {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 24px;
+      margin-bottom: 20px;
+    }
+
+    .intro-progress-fill-light {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #0d9488);
+      border-radius: 9999px;
+      transition: width 2.2s ease-in-out;
+    }
+
+    /* ==========================================================================
+       PWA & MOBILE RESPONSIVE ENHANCEMENTS
+       ========================================================================== */
+    .pwa-install-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 440px;
+      width: calc(100% - 32px);
+      box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.25);
+      animation: pwa-slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes pwa-slide-up {
+      from { transform: translateY(80px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Mobile scrolling for tab navigation without clipping */
+    .nav-tabs-light {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 2px;
+    }
+
+    .nav-tabs-light::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-tabs-light .nav-link {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 991px) {
+      .light-navbar {
+        padding: 10px 16px;
+      }
+      .brand-title {
+        font-size: 0.95rem;
+      }
+      .brand-subtitle {
+        font-size: 0.68rem;
+      }
+      .hud-light-card {
+        padding: 16px;
+      }
+      .score-value-big {
+        font-size: 2.2rem;
+      }
+      .pwa-install-banner {
+        bottom: 12px;
+        right: 16px;
+        left: 16px;
+        width: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container-fluid {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+      .brand-shield-badge {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+      }
+      .brand-title {
+        font-size: 0.88rem;
+      }
+      .telemetry-chip {
+        display: none;
+      }
+      .gandhi-modal-card {
+        padding: 24px 20px;
+      }
+      .gandhi-art-box {
+        width: 140px;
+        height: 140px;
+      }
+      .gandhi-quote-text {
+        font-size: 0.92rem;
+      }
+      .hud-light-card .col-md-3 {
+        border-right: none !important;
+        border-bottom: 1px solid var(--card-border);
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+      }
+      .specimen-item {
+        padding: 8px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-title {
+        font-size: 0.82rem;
+      }
+      .brand-subtitle {
+        display: none;
+      }
+      .btn-pill-nav {
+        padding: 4px 10px;
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MAHATMA GANDHI SOVEREIGN INTRO SPLASH OVERLAY -->
+  <div id="gandhiIntroOverlay">
+    <div class="gandhi-modal-card">
+      <div class="gandhi-art-box">
+        <img src="/static/gandhi_intro.jpg" alt="Mahatma Gandhi Sovereign Art" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div class="gandhi-quote-text">
+        "If I have the belief that I can do it, I shall surely acquire the capacity to do it even if I may not have it at the beginning."
+      </div>
+      <div class="gandhi-author-text">
+        — Mahatma Gandhi
+      </div>
+      
+      <div class="intro-progress-bar-light">
+        <div class="intro-progress-fill-light" id="introProgressFill"></div>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="small text-muted" style="font-size: 0.74rem;">
+          Ministry of External Affairs (MEA) Security Gateway
+        </span>
+        <button class="btn-pill-action" id="btnDismissIntro" style="width: auto; padding: 7px 22px; font-size: 0.8rem;">
+          <span>Enter Portal</span>
+          <i class="fa-solid fa-arrow-right ms-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="light-navbar">
+    <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center p-0">
+      
+      <!-- Identity Brand -->
+      <div class="d-flex align-items-center">
+        <div class="brand-shield-badge me-3">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="brand-title">
+            AI BASED FAKE IDENTITY & DOCUMENT SCREENING SYSTEM
+          </div>
+          <div class="brand-subtitle d-flex align-items-center gap-2">
+            <span>Ministry of External Affairs (MEA) • CPV Division • BOI/LOC Sync</span>
+            <span class="telemetry-chip ms-2"><span class="live-dot-green"></span> LIVE TELEMETRY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+        <button class="btn-pill-nav btn-sm" id="btnInstallPwa" style="display:none; border-color: #3b82f6; background: #eff6ff; color: #2563eb; font-weight: 700;">
+          <i class="fa-solid fa-download me-1 text-primary"></i> Install App
+        </button>
+        <button class="btn-pill-nav btn-sm" id="btnShowGandhiQuote" title="View Sovereign Motto">
+          <i class="fa-solid fa-quote-left me-1 text-primary"></i> National Motto
+        </button>
+        <button class="btn-pill-nav btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
+          <i class="fa-solid fa-plus-circle me-1 text-success"></i> Register Record
+        </button>
+        <button class="btn-pill-nav btn-sm" id="btnExportJson">
+          <i class="fa-solid fa-file-export me-1 text-info"></i> Export Audit Dossier
+        </button>
+        <button class="btn-pill-nav btn-sm" onclick="location.reload()">
+          <i class="fa-solid fa-rotate me-1 text-warning"></i> Refresh
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- MOBILE / DESKTOP PWA INSTALL PROMPT TOAST -->
+  <div id="pwaInstallBanner" class="pwa-install-banner" style="display:none;">
+    <div class="d-flex align-items-center gap-3">
+      <img src="/static/icons/icon-96x96.png" alt="App Icon" style="width: 38px; height: 38px; border-radius: 10px;">
+      <div>
+        <div class="fw-bold" style="font-size: 0.85rem; color: #0f172a;">Install DocScreen AI</div>
+        <div class="small text-muted" style="font-size: 0.72rem;">Full-screen offline border security scanner</div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-primary px-3 fw-bold" id="btnPwaBannerInstall" style="border-radius: 9999px; font-size: 0.75rem;">Install</button>
+      <button class="btn btn-sm btn-light px-2" id="btnPwaBannerDismiss" style="border-radius: 9999px; font-size: 0.75rem;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+
+  <!-- Main Application Body Grid -->
+  <div class="container-fluid px-4 py-3">
+    <div class="row g-3">
+      
+      <!-- LEFT COLUMN: CONTROLS & SPECIMENS -->
+      <div class="col-lg-3 col-md-4">
+        
+        <!-- Live Upload & Camera Card -->
+        <div class="light-card mb-3">
+          <div class="light-card-header">
+            <span class="d-flex align-items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up text-primary"></i> Document Intake & Verification
+            </span>
+            <span class="badge-pill-soft" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;">Live</span>
+          </div>
+          <div class="card-body p-3">
+            <form id="uploadForm" enctype="multipart/form-data">
+              <div class="mb-2">
+                <label class="form-label-light">Document Classification</label>
+                <select class="form-select form-select-sm form-select-light" name="doc_type" id="selectDocType">
+                  <option value="passport">Indian Passport (ICAO TD3)</option>
+                  <option value="aadhaar">Indian Aadhaar Card (UIDAI)</option>
+                  <option value="visa">Indian Visa / e-Visa</option>
+                  <option value="pan_card">PAN Card / National ID</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label class="form-label-light">Document Image Source</label>
+                <input type="file" class="form-control form-control-sm form-control-light" id="inputDocFile" name="doc_file" accept="image/*" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label-light">Live Traveler Facial Probe (Optional)</label>
+                <input type="file" class="form-control form-control-sm form-control-light" id="inputLiveFile" name="live_file" accept="image/*">
+              </div>
+              
+              <!-- Camera Controls -->
+              <div class="mb-3">
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn-pill-nav btn-sm flex-grow-1" id="btnToggleCam">
+                    <i class="fa-solid fa-camera me-1"></i> Camera / Webcam
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="btnSwitchCam" style="display:none; border-radius: 9999px;" title="Switch Front/Rear Camera">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                  </button>
+                  <button type="button" class="btn btn-warning btn-sm fw-bold px-3" id="btnSnapCam" style="display:none; border-radius: 9999px;">
+                    <i class="fa-solid fa-circle-dot me-1"></i> Snap
+                  </button>
+                </div>
+                <video id="webcamVideo" autoplay playsinline class="mt-2" style="width: 100%; border-radius: 10px; border: 1px solid #bfdbfe; display: none;"></video>
+                <canvas id="snapshotCanvas" style="display:none;"></canvas>
+              </div>
+
+              <button type="submit" class="btn-pill-action" id="btnUploadSubmit">
+                <span>Verify & Screen Document</span>
+                <i class="fa-solid fa-arrow-right ms-1"></i>
+              </button>
+              
+              <div class="text-center mt-2" style="font-size: 0.72rem; color: #2563eb;">
+                <i class="fa-solid fa-circle-check me-1"></i> Dynamic verification: OCR, Verhoeff, ICAO & Forensics
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Benchmark Reference Test Scenarios Card -->
+        <div class="light-card">
+          <div class="light-card-header">
+            <span class="d-flex align-items-center gap-2">
+              <i class="fa-solid fa-layer-group text-primary"></i> Benchmark Reference Specimens
+            </span>
+            <span class="badge-pill-soft" style="background: #f8fafc; color: #475569; border: 1px solid #e2e8f0;">10 Test Cases</span>
+          </div>
+          <div class="p-2 pb-1" style="border-bottom: 1px solid var(--card-border-subtle);">
+            <div style="font-size: 0.72rem; color: #64748b; line-height: 1.35;">
+              Preloaded test specimens to benchmark fraud detection algorithms.
+            </div>
+          </div>
+          <div class="card-body p-2" id="specimensList">
+            <div class="text-center py-3" style="color: #94a3b8; font-size: 0.8rem;">
+              <i class="fa-solid fa-spinner fa-spin me-2"></i>Loading test suite...
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: EXECUTIVE DASHBOARD & INSPECTION TABS -->
+      <div class="col-lg-9 col-md-8">
+        
+        <!-- TOP ROW: VERDICT & EXECUTIVE HUD -->
+        <div class="hud-light-card mb-3">
+          <div class="row align-items-center">
+            
+            <!-- Risk Score Metric Box -->
+            <div class="col-md-3 text-center" style="border-right: 1px solid var(--card-border);">
+              <div class="d-flex flex-column align-items-center justify-content-center px-2">
+                <div class="quick-stat-title mb-1">Overall Risk Score</div>
+                <div class="score-value-big" id="riskScoreVal">--</div>
+                <div class="progress mt-2 w-100" style="height: 6px; background: #e2e8f0; border-radius: 9999px;">
+                  <div class="progress-bar" id="riskProgressBar" role="progressbar" style="width: 0%; border-radius: 9999px; transition: width 0.4s ease;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Decision Statement & Flagged Reasons -->
+            <div class="col-md-9 ps-md-4 mt-3 mt-md-0">
+              <div class="verdict-banner verdict-neutral mb-2" id="verdictBanner">
+                <div class="me-3 p-2 rounded-circle" style="background: #eff6ff; color: #2563eb;">
+                  <i class="fa-solid fa-shield-halved fa-lg"></i>
+                </div>
+                <div>
+                  <div class="fw-bold">Awaiting Document</div>
+                  <div class="small text-muted fw-normal">Upload your document on the left or select a reference specimen to initiate evaluation.</div>
+                </div>
+              </div>
+              <div id="riskReasonsBox" style="font-size: 0.82rem; color: #64748b;">
+                Awaiting border screening input...
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MAIN DETAILS TABS -->
+        <div class="light-card">
+          <div class="card-header p-0" style="background: transparent; border: none;">
+            <ul class="nav light-tabs" id="docTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-doc-btn" data-bs-toggle="tab" data-bs-target="#tab-doc" type="button">
+                  <i class="fa-solid fa-passport"></i> Document & VIZ <span id="badge-tab-doc"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-db-btn" data-bs-toggle="tab" data-bs-target="#tab-db" type="button">
+                  <i class="fa-solid fa-database"></i> Database & PKI <span id="badge-tab-db"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-mrz-btn" data-bs-toggle="tab" data-bs-target="#tab-mrz" type="button">
+                  <i class="fa-solid fa-barcode"></i> ICAO MRZ <span id="badge-tab-mrz"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-forensics-btn" data-bs-toggle="tab" data-bs-target="#tab-forensics" type="button">
+                  <i class="fa-solid fa-microchip"></i> Forensics <span id="badge-tab-forensics"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-face-btn" data-bs-toggle="tab" data-bs-target="#tab-face" type="button">
+                  <i class="fa-solid fa-user-check"></i> Face Biometrics <span id="badge-tab-face"></span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-watch-btn" data-bs-toggle="tab" data-bs-target="#tab-watch" type="button">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Watchlist / LOC <span id="badge-tab-watch"></span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="tab-content" id="docTabsContent">
+              
+              <!-- TAB 1: DOCUMENT & VIZ -->
+              <div class="tab-pane fade show active" id="tab-doc" role="tabpanel">
+                
+                <!-- QUICK STATUS METRICS ROW -->
+                <div class="row g-2 mb-4" id="quickStatusRow" style="display: none;">
+                  <div class="col-md-3 col-6">
+                    <div class="quick-stat-light">
+                      <div class="quick-stat-title">Validity & Expiry</div>
+                      <div class="quick-stat-val" id="qsExpiry">--</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="quick-stat-light">
+                      <div class="quick-stat-title">ICAO Doc 9303 MRZ</div>
+                      <div class="quick-stat-val" id="qsMrz">--</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="quick-stat-light">
+                      <div class="quick-stat-title">Pixel Forensics</div>
+                      <div class="quick-stat-val" id="qsForensics">--</div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="quick-stat-light">
+                      <div class="quick-stat-title">1:1 Biometrics</div>
+                      <div class="quick-stat-val" id="qsFace">--</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold" style="color: #0f172a; font-size: 0.88rem;">
+                        <i class="fa-solid fa-image me-1 text-primary"></i> Uploaded Document Inspection
+                      </span>
+                    </div>
+                    <div class="preview-box-dashed">
+                      <img id="docPreviewImg" src="" alt="Document Scan" class="img-fluid rounded-3" style="max-height: 380px; object-fit: contain; display: none;">
+                      <div id="docPreviewPlaceholder" class="text-center">
+                        <div class="p-3 rounded-circle d-inline-flex mb-2" style="background: #f1f5f9; color: #64748b;">
+                          <i class="fa-regular fa-file-lines fa-2x"></i>
+                        </div>
+                        <div class="fw-bold text-dark small">No document uploaded yet.</div>
+                        <div class="text-muted small" style="font-size: 0.76rem;">Upload a document to begin inspection and visualization.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fw-bold" style="color: #0f172a; font-size: 0.88rem;">
+                        <i class="fa-solid fa-list-check me-1 text-primary"></i> Extracted Visual Fields (VIZ)
+                      </span>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table-viz-clean">
+                        <tbody id="vizFieldsTable">
+                          <tr>
+                            <td colspan="2" class="text-center py-5" style="border: none; background: transparent;">
+                              <div class="p-3 rounded-circle d-inline-flex mb-2" style="background: #f1f5f9; color: #64748b;">
+                                <i class="fa-solid fa-magnifying-glass-plus fa-2x"></i>
+                              </div>
+                              <div class="fw-bold text-dark small">Awaiting document upload...</div>
+                              <div class="text-muted small" style="font-size: 0.76rem;">Visual data will be extracted automatically.</div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 2: DATABASE & PKI DIGITAL SIGNATURE -->
+              <div class="tab-pane fade" id="tab-db" role="tabpanel">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                      <i class="fa-solid fa-server me-1 text-primary"></i> National Registry Issuance Match
+                    </div>
+                    <div class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid var(--card-border);" id="dbMatchDetailsBox">
+                      <div class="text-muted small">No database check completed yet.</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                      <i class="fa-solid fa-key me-1 text-primary"></i> Digital PKI & CSCA Signature
+                    </div>
+                    <div class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid var(--card-border);" id="pkiDetailsBox">
+                      <div class="text-muted small">Passive authentication status.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 3: ICAO MRZ & CHECKSUMS -->
+              <div class="tab-pane fade" id="tab-mrz" role="tabpanel">
+                <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                  <i class="fa-solid fa-terminal me-1 text-primary"></i> Machine Readable Zone (MRZ)
+                </div>
+                <div class="mrz-terminal-clean mb-3" id="mrzLinesBox">-- AWAITING DOCUMENT --</div>
+                <div class="light-card">
+                  <div class="light-card-header small fw-bold">
+                    ICAO Doc 9303 Check Digit Verification
+                  </div>
+                  <div class="card-body p-3" id="mrzValidationBox">
+                    <div class="text-muted small">Select or upload a document to inspect checksum status.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 4: TAMPERING FORENSICS -->
+              <div class="tab-pane fade" id="tab-forensics" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="fw-bold" style="color: #0f172a; font-size: 0.88rem;">
+                    <i class="fa-solid fa-fingerprint me-1 text-primary"></i> Multi-Signal Forensic Heatmap Suite
+                  </div>
+                  <span id="tamperStatusBadge" class="badge-pill-soft" style="background: #f1f5f9; color: #475569;">AWAITING INPUT</span>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-3 col-6">
+                    <div class="small fw-bold text-muted mb-1">Error Level Analysis (ELA)</div>
+                    <img id="heatmapEla" src="" class="heatmap-clean-img" alt="ELA Map">
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="small fw-bold text-muted mb-1">Local Noise Variance</div>
+                    <img id="heatmapVariance" src="" class="heatmap-clean-img" alt="Variance Map">
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="small fw-bold text-muted mb-1">Photo Splice Seam</div>
+                    <img id="heatmapSplice" src="" class="heatmap-clean-img" alt="Splice Map">
+                  </div>
+                  <div class="col-md-3 col-6">
+                    <div class="small fw-bold text-muted mb-1">Stamp Forgery / Overlay</div>
+                    <img id="heatmapStamp" src="" class="heatmap-clean-img" alt="Stamp Map">
+                  </div>
+                </div>
+                <div class="mt-3 p-3 rounded-3" style="background: #f8fafc; border: 1px solid var(--card-border);" id="tamperDetailsBox">
+                  <div class="small text-muted">Forensic inspection logs will appear here.</div>
+                </div>
+              </div>
+
+              <!-- TAB 5: FACE BIOMETRICS & 1:N GALLERY -->
+              <div class="tab-pane fade" id="tab-face" role="tabpanel">
+                <div class="row g-3">
+                  <div class="col-md-4 text-center">
+                    <div class="small fw-bold text-muted mb-1">Document Portrait</div>
+                    <div class="preview-box-dashed" style="min-height: 200px;">
+                      <img id="faceDocImg" src="" class="img-fluid rounded" style="max-height: 200px;" alt="Doc Face">
+                    </div>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="small fw-bold text-muted mb-1">Live Traveler Probe</div>
+                    <div class="preview-box-dashed" style="min-height: 200px;">
+                      <img id="faceLiveImg" src="" class="img-fluid rounded" style="max-height: 200px;" alt="Live Face">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                      1:1 Biometric Verification
+                    </div>
+                    <div class="p-3 rounded-3 mb-3" style="background: #f8fafc; border: 1px solid var(--card-border);">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-muted">Facial Similarity:</span>
+                        <span class="fw-bold" id="faceMatchScore" style="color: #0f172a;">--%</span>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-muted">1:1 Status:</span>
+                        <span class="badge-pill-soft" id="faceMatchBadge" style="background: #f1f5f9; color: #475569;">--</span>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">Engine:</span>
+                        <span class="badge-pill-soft" id="faceEngineBadge" style="background: #eff6ff; color: #2563eb;">--</span>
+                      </div>
+                    </div>
+
+                    <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                      1:N Multi-Identity Gallery Search
+                    </div>
+                    <div class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid var(--card-border);" id="galleryAlertBox">
+                      <div class="small text-muted">No historical conflict detected.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TAB 6: WATCHLIST & BOI LOC -->
+              <div class="tab-pane fade" id="tab-watch" role="tabpanel">
+                <div class="fw-bold mb-2" style="color: #0f172a; font-size: 0.88rem;">
+                  <i class="fa-solid fa-shield-virus me-1 text-danger"></i> Bureau of Immigration (BOI) & Interpol Intelligence Check
+                </div>
+                <div id="watchlistContentBox" class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid var(--card-border);">
+                  <div class="text-muted small">Select or upload a document to run watchlist screening.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER IN DATABASE MODAL -->
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content modal-content-light">
+        <div class="modal-header" style="border-bottom: 1px solid var(--card-border);">
+          <h5 class="modal-title fw-bold" style="font-size: 1rem; color: #0f172a;">
+            <i class="fa-solid fa-folder-plus text-success me-2"></i>Register Document in Database
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="mb-2">
+              <label class="form-label-light">Document Classification</label>
+              <select class="form-select form-select-sm form-select-light" id="regDocType">
+                <option value="passport">Indian Passport</option>
+                <option value="aadhaar">Indian Aadhaar</option>
+                <option value="visa">Indian Visa</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label-light">Document Identifier (Passport No / 12-Digit UID)</label>
+              <input type="text" class="form-control form-control-sm form-control-light" id="regDocNum" required placeholder="e.g. Z1234567 or 543210987652">
+            </div>
+            <div class="mb-2">
+              <label class="form-label-light">Full Legal Name</label>
+              <input type="text" class="form-control form-control-sm form-control-light" id="regFullName" required placeholder="e.g. AARYAMAN RANA">
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label-light">Date of Birth (YYYY-MM-DD)</label>
+                <input type="date" class="form-control form-control-sm form-control-light" id="regDob" value="1998-03-14">
+              </div>
+              <div class="col-6">
+                <label class="form-label-light">Expiry Date (YYYY-MM-DD)</label>
+                <input type="date" class="form-control form-control-sm form-control-light" id="regExpiry" value="2035-06-09">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label-light">Issuance Status</label>
+              <select class="form-select form-select-sm form-select-light" id="regStatus">
+                <option value="ACTIVE">ACTIVE (Genuine Valid Document)</option>
+                <option value="REVOKED">REVOKED (Cancelled / Impounded)</option>
+                <option value="EXPIRED">EXPIRED</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-pill-action">
+              <i class="fa-solid fa-save me-1"></i> Save to SQLite Government Database
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentReport = null;
+    let webcamStream = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Intro Splash logic
+      const introOverlay = document.getElementById("gandhiIntroOverlay");
+      const introProgress = document.getElementById("introProgressFill");
+      const btnDismissIntro = document.getElementById("btnDismissIntro");
+      const btnShowGandhiQuote = document.getElementById("btnShowGandhiQuote");
+
+      // Auto start progress fill
+      setTimeout(() => {
+        if (introProgress) introProgress.style.width = "100%";
+      }, 100);
+
+      // Auto dismiss intro after 2.8s
+      const introTimer = setTimeout(() => {
+        dismissIntro();
+      }, 3000);
+
+      function dismissIntro() {
+        clearTimeout(introTimer);
+        if (introOverlay) {
+          introOverlay.style.opacity = "0";
+          setTimeout(() => {
+            introOverlay.style.display = "none";
+          }, 500);
+        }
+      }
+
+      if (btnDismissIntro) {
+        btnDismissIntro.addEventListener("click", dismissIntro);
+      }
+
+      if (btnShowGandhiQuote) {
+        btnShowGandhiQuote.addEventListener("click", () => {
+          if (introOverlay) {
+            introOverlay.style.display = "flex";
+            setTimeout(() => {
+              introOverlay.style.opacity = "1";
+            }, 50);
+          }
+        });
+      }
+
+      loadSpecimens();
+
+      // Webcam toggle & Camera Facing Switch for Mobile
+      const btnToggleCam = document.getElementById("btnToggleCam");
+      const btnSwitchCam = document.getElementById("btnSwitchCam");
+      const btnSnapCam = document.getElementById("btnSnapCam");
+      const video = document.getElementById("webcamVideo");
+      let currentFacingMode = "user";
+
+      async function startCameraStream(facing) {
+        if (webcamStream) {
+          webcamStream.getTracks().forEach(t => t.stop());
+          webcamStream = null;
+        }
+        try {
+          webcamStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: facing ? { ideal: facing } : { ideal: "user" },
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            }
+          });
+          video.srcObject = webcamStream;
+          video.style.display = "block";
+          btnSnapCam.style.display = "inline-block";
+          if (btnSwitchCam) btnSwitchCam.style.display = "inline-block";
+          btnToggleCam.innerHTML = '<i class="fa-solid fa-video-slash me-1"></i> Stop';
+        } catch (err) {
+          alert("Unable to access camera: " + err.message);
+        }
+      }
+
+      btnToggleCam.addEventListener("click", async () => {
+        if (!webcamStream) {
+          await startCameraStream(currentFacingMode);
+        } else {
+          webcamStream.getTracks().forEach(t => t.stop());
+          webcamStream = null;
+          video.style.display = "none";
+          btnSnapCam.style.display = "none";
+          if (btnSwitchCam) btnSwitchCam.style.display = "none";
+          btnToggleCam.innerHTML = '<i class="fa-solid fa-camera me-1"></i> Camera / Webcam';
+        }
+      });
+
+      if (btnSwitchCam) {
+        btnSwitchCam.addEventListener("click", async () => {
+          currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
+          await startCameraStream(currentFacingMode);
+        });
+      }
+
+      btnSnapCam.addEventListener("click", () => {
+        const canvas = document.getElementById("snapshotCanvas");
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          const file = new File([blob], "live_camera_probe.jpg", { type: "image/jpeg" });
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          document.getElementById("inputLiveFile").files = dt.files;
+          alert("Live facial probe snapshot captured!");
+        }, "image/jpeg");
+      });
+
+      // Clear specimen active state when a real file is chosen
+      document.getElementById("inputDocFile").addEventListener("change", () => {
+        document.querySelectorAll(".specimen-btn").forEach(b => b.classList.remove("active"));
+      });
+
+      // Upload Form Submit
+      document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const docFile = document.getElementById("inputDocFile").files[0];
+        if (!docFile) {
+          alert("Please select a document image to screen.");
+          return;
+        }
+        const formData = new FormData(document.getElementById("uploadForm"));
+        document.getElementById("btnUploadSubmit").innerHTML = '<span><i class="fa-solid fa-spinner fa-spin me-1"></i> Screening Document...</span>';
+        document.querySelectorAll(".specimen-btn").forEach(b => b.classList.remove("active"));
+        
+        try {
+          const res = await fetch("/api/upload_and_screen", { method: "POST", body: formData });
+          const data = await res.json();
+          const docTabBtn = document.getElementById("tab-doc-btn");
+          if (docTabBtn && bootstrap.Tab) {
+            bootstrap.Tab.getOrCreateInstance(docTabBtn).show();
+          }
+          renderScreeningResults(data, true, docFile.name);
+        } catch (err) {
+          alert("Screening failed: " + err.message);
+        } finally {
+          document.getElementById("btnUploadSubmit").innerHTML = '<span>Verify & Screen Document</span><i class="fa-solid fa-arrow-right ms-1"></i>';
+        }
+      });
+
+      // Register in DB Form Submit
+      document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const payload = {
+          doc_type: document.getElementById("regDocType").value,
+          doc_number: document.getElementById("regDocNum").value,
+          full_name: document.getElementById("regFullName").value,
+          dob: document.getElementById("regDob").value,
+          expiry_date: document.getElementById("regExpiry").value,
+          status: document.getElementById("regStatus").value,
+        };
+        try {
+          const res = await fetch("/api/db/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            alert(data.message);
+            bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide();
+          } else {
+            alert("Error: " + data.error);
+          }
+        } catch (err) {
+          alert("Registration failed: " + err.message);
+        }
+      });
+
+      // Export JSON Audit Report
+      document.getElementById("btnExportJson").addEventListener("click", () => {
+        if (!currentReport) {
+          alert("No screening report available to export.");
+          return;
+        }
+        const blob = new Blob([JSON.stringify(currentReport, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `screening_audit_${currentReport.timestamp || "report"}.json`;
+        a.click();
+      });
+    });
+
+    async function loadSpecimens() {
+      try {
+        const res = await fetch("/api/specimens");
+        const data = await res.json();
+        const list = document.getElementById("specimensList");
+        list.innerHTML = "";
+
+        const BADGE_MAP = {
+          "Real Indian Passport (Garima Thapliyal)": { text: "Real Doc", style: "background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;" },
+          "Genuine Indian Passport": { text: "Genuine", style: "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;" },
+          "Tampered DOB Indian Passport": { text: "DOB Tamper", style: "background:#fffbeb; color:#d97706; border:1px solid #fde68a;" },
+          "Photo Replaced Indian Passport": { text: "Face Splice", style: "background:#fef2f2; color:#dc2626; border:1px solid #fecaca;" },
+          "Blacklisted Indian Passport (BOI LOC)": { text: "BOI/LOC", style: "background:#fef2f2; color:#dc2626; border:1px solid #fecaca;" },
+          "Expired Indian Passport": { text: "Expired", style: "background:#fffbeb; color:#d97706; border:1px solid #fde68a;" },
+          "Genuine Indian Entry Visa": { text: "e-Visa", style: "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;" },
+          "Forged Indian Visa Stamp": { text: "Fake Stamp", style: "background:#fef2f2; color:#dc2626; border:1px solid #fecaca;" },
+          "Genuine Indian Aadhaar Card": { text: "UIDAI Valid", style: "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;" },
+          "Tampered Aadhaar (Invalid Checksum)": { text: "Verhoeff Fail", style: "background:#fef2f2; color:#dc2626; border:1px solid #fecaca;" }
+        };
+
+        data.specimens.forEach((spec) => {
+          const btn = document.createElement("button");
+          btn.className = "specimen-btn";
+          const badgeInfo = BADGE_MAP[spec.name] || { text: "Test Case", style: "background:#f1f5f9; color:#475569;" };
+          btn.innerHTML = `<span class="d-flex align-items-center"><i class="fa-solid fa-angle-right me-2 text-muted" style="font-size:0.75rem;"></i>${spec.name}</span><div class="d-flex align-items-center gap-2"><span class="badge-pill-soft" style="${badgeInfo.style}">${badgeInfo.text}</span><i class="fa-solid fa-chevron-right text-muted" style="font-size:0.7rem;"></i></div>`;
+          btn.addEventListener("click", () => {
+            document.querySelectorAll(".specimen-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            screenSpecimen(spec.doc_filename, spec.live_filename, btn, spec.name, badgeInfo);
+          });
+          list.appendChild(btn);
+        });
+      } catch (err) {
+        document.getElementById("specimensList").innerHTML = `<div class="text-danger small p-2">Failed to load specimens: ${err.message}</div>`;
+      }
+    }
+
+    async function screenSpecimen(docFilename, liveFilename, btnElem = null, specName = "", badgeInfo = null) {
+      const origHtml = btnElem ? btnElem.innerHTML : "";
+      if (btnElem) {
+        btnElem.innerHTML = `<span><i class="fa-solid fa-spinner fa-spin me-2 text-primary"></i>Screening...</span><span class="badge-pill-soft" style="${badgeInfo ? badgeInfo.style : ''}">${badgeInfo ? badgeInfo.text : ''}</span>`;
+      }
+      try {
+        const res = await fetch("/api/screen", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ doc_filename: docFilename, live_filename: liveFilename })
+        });
+        const data = await res.json();
+        const docTabBtn = document.getElementById("tab-doc-btn");
+        if (docTabBtn && bootstrap.Tab) {
+          bootstrap.Tab.getOrCreateInstance(docTabBtn).show();
+        }
+        renderScreeningResults(data, false, "", specName || docFilename);
+      } catch (err) {
+        alert("Failed to screen specimen: " + err.message);
+      } finally {
+        if (btnElem) btnElem.innerHTML = origHtml;
+      }
+    }
+
+    function renderScreeningResults(data, isUpload = false, uploadFilename = "", specName = "") {
+      currentReport = data;
+
+      // 1. Verdict & Score Banner
+      const scoreVal = document.getElementById("riskScoreVal");
+      const progressBar = document.getElementById("riskProgressBar");
+      const banner = document.getElementById("verdictBanner");
+      const reasonsBox = document.getElementById("riskReasonsBox");
+
+      scoreVal.innerText = `${data.risk_score}/100`;
+      progressBar.style.width = `${data.risk_score}%`;
+
+      const sourceTag = isUpload
+        ? `<div class="mb-1"><span class="badge-pill-soft" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;"><i class="fa-solid fa-file-shield me-1"></i> User Upload: ${uploadFilename || (data.doc_filename ? data.doc_filename.split('/').pop() : 'Uploaded Image')}</span></div>`
+        : `<div class="mb-1"><span class="badge-pill-soft" style="background:#f8fafc; color:#475569; border:1px solid #e2e8f0;"><i class="fa-solid fa-layer-group me-1 text-primary"></i> Benchmark Case: ${specName || 'Reference'}</span></div>`;
+
+      banner.className = "verdict-banner mb-2";
+      if (data.verdict === "GREEN") {
+        banner.classList.add("verdict-green");
+        banner.innerHTML = `<div class="me-3 p-2 rounded-circle" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-circle-check fa-lg"></i></div><div>${sourceTag}<div class="fw-bold">[GREEN] ${data.decision_text}</div></div>`;
+        progressBar.style.background = "#16a34a";
+        scoreVal.style.color = "#16a34a";
+      } else if (data.verdict === "YELLOW") {
+        banner.classList.add("verdict-yellow");
+        banner.innerHTML = `<div class="me-3 p-2 rounded-circle" style="background:#fef3c7; color:#b45309;"><i class="fa-solid fa-triangle-exclamation fa-lg"></i></div><div>${sourceTag}<div class="fw-bold">[YELLOW] ${data.decision_text}</div></div>`;
+        progressBar.style.background = "#d97706";
+        scoreVal.style.color = "#d97706";
+      } else {
+        banner.classList.add("verdict-red");
+        banner.innerHTML = `<div class="me-3 p-2 rounded-circle" style="background:#fee2e2; color:#b91c1c;"><i class="fa-solid fa-ban fa-lg"></i></div><div>${sourceTag}<div class="fw-bold">[RED] ${data.decision_text}</div></div>`;
+        progressBar.style.background = "#dc2626";
+        scoreVal.style.color = "#dc2626";
+      }
+
+      if (data.reasons && data.reasons.length > 0) {
+        reasonsBox.innerHTML = '<strong class="text-dark">Flagged Issues:</strong> ' + data.reasons.map(r => `<span class="badge-pill-soft me-1 mt-1" style="background:#fee2e2; color:#b91c1c; border:1px solid #fecaca;">${r}</span>`).join(" ");
+      } else {
+        reasonsBox.innerHTML = '<span class="text-success"><i class="fa-solid fa-check-double me-1"></i> All sovereign standards, registry checks, and biometrics verified clean.</span>';
+      }
+
+      // 2. Quick Status Metrics Row
+      const qsRow = document.getElementById("quickStatusRow");
+      if (qsRow) qsRow.style.display = "flex";
+
+      const isMrzTampered = (data.cross_check && !data.cross_check.all_matched) || (data.reasons || []).some(r => r.toUpperCase().includes("MRZ") && (r.toUpperCase().includes("FORGERY") || r.toUpperCase().includes("TAMPERING") || r.toUpperCase().includes("MISMATCH") || r.toUpperCase().includes("CONTRADICTS")));
+
+      const qsExpiry = document.getElementById("qsExpiry");
+      const expiryField = data.ocr && data.ocr.fields ? (data.ocr.fields.expiry_date || data.ocr.fields.valid_until) : null;
+      const isExpiredFlag = (data.reasons || []).some(r => r.toUpperCase().includes("EXPIRED"));
+      if (isExpiredFlag) {
+        qsExpiry.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-circle-xmark me-1"></i>EXPIRED</span>';
+      } else if (expiryField) {
+        qsExpiry.innerHTML = `<span class="text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i>VALID (${expiryField})</span>`;
+      } else {
+        qsExpiry.innerHTML = '<span class="text-primary fw-bold"><i class="fa-solid fa-id-card me-1"></i>ACTIVE</span>';
+      }
+
+      const qsMrz = document.getElementById("qsMrz");
+      if (data.ocr && data.ocr.mrz_lines && data.ocr.mrz_lines.length > 0) {
+        if (isMrzTampered) {
+          qsMrz.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i>FORGED / SWAPPED</span>';
+        } else if (data.ocr.mrz_all_ok) {
+          qsMrz.innerHTML = '<span class="text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i>PASS (7-3-1 OK)</span>';
+        } else {
+          qsMrz.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-circle-xmark me-1"></i>CHECKSUM FAIL</span>';
+        }
+      } else if (data.doc_type === "aadhaar") {
+        const vOk = data.ocr && data.ocr.fields && data.ocr.fields.verhoeff_valid;
+        qsMrz.innerHTML = vOk ? '<span class="text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i>UIDAI VERHOEFF OK</span>' : '<span class="text-danger fw-bold"><i class="fa-solid fa-circle-xmark me-1"></i>VERHOEFF FAIL</span>';
+      } else {
+        qsMrz.innerHTML = '<span class="text-muted fw-bold"><i class="fa-solid fa-minus me-1"></i>CARD FORMAT</span>';
+      }
+
+      const qsForensics = document.getElementById("qsForensics");
+      if (data.tampering && data.tampering.is_tampered) {
+        qsForensics.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i>TAMPERED</span>';
+      } else {
+        qsForensics.innerHTML = '<span class="text-success fw-bold"><i class="fa-solid fa-shield-check me-1"></i>CLEAN</span>';
+      }
+
+      const qsFace = document.getElementById("qsFace");
+      if (data.face && data.face.live_provided) {
+        if (data.face.matched) {
+          qsFace.innerHTML = `<span class="text-success fw-bold"><i class="fa-solid fa-user-check me-1"></i>MATCH (${(data.face.similarity_score * 100).toFixed(0)}%)</span>`;
+        } else {
+          qsFace.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-user-xmark me-1"></i>MISMATCH</span>';
+        }
+      } else {
+        qsFace.innerHTML = '<span class="text-muted fw-bold">DOC INSPECTION</span>';
+      }
+
+      // 3. Tab Header Badges
+      const fieldCount = (data.ocr && data.ocr.fields) ? Object.keys(data.ocr.fields).length : 0;
+      document.getElementById("badge-tab-doc").innerHTML = `<span class="badge-pill-soft ms-1" style="background:#eff6ff; color:#2563eb; font-size:0.65rem;">${fieldCount}</span>`;
+
+      const badgeDb = document.getElementById("badge-tab-db");
+      if (data.database && data.database.record_found && data.database.is_active) {
+        badgeDb.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f0fdf4; color:#16a34a; font-size:0.65rem;">Active</span>';
+      } else if (data.database && data.database.record_found && !data.database.is_active) {
+        badgeDb.innerHTML = `<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem;">${data.database.status_in_db}</span>`;
+      } else {
+        badgeDb.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f1f5f9; color:#64748b; font-size:0.65rem;">Unreg</span>';
+      }
+
+      const badgeMrz = document.getElementById("badge-tab-mrz");
+      if (data.ocr && data.ocr.mrz_lines && data.ocr.mrz_lines.length > 0) {
+        if (isMrzTampered) {
+          badgeMrz.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem; border:1px solid #fca5a5;">SWAPPED / FORGED</span>';
+        } else if (data.ocr.mrz_all_ok) {
+          badgeMrz.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f0fdf4; color:#16a34a; font-size:0.65rem;">Valid</span>';
+        } else {
+          badgeMrz.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem;">Fail</span>';
+        }
+      } else if (data.doc_type === "aadhaar") {
+        badgeMrz.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#eff6ff; color:#2563eb; font-size:0.65rem;">UIDAI</span>';
+      } else {
+        badgeMrz.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f1f5f9; color:#64748b; font-size:0.65rem;">Card</span>';
+      }
+
+      const badgeForensics = document.getElementById("badge-tab-forensics");
+      if (data.tampering && data.tampering.is_tampered) {
+        badgeForensics.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem;">Alert</span>';
+      } else {
+        badgeForensics.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f0fdf4; color:#16a34a; font-size:0.65rem;">Clean</span>';
+      }
+
+      const badgeFace = document.getElementById("badge-tab-face");
+      if (data.face && data.face.live_provided) {
+        badgeFace.innerHTML = data.face.matched ? '<span class="badge-pill-soft ms-1" style="background:#f0fdf4; color:#16a34a; font-size:0.65rem;">Match</span>' : '<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem;">Mismatch</span>';
+      } else {
+        badgeFace.innerHTML = '';
+      }
+
+      const badgeWatch = document.getElementById("badge-tab-watch");
+      if (data.blacklist && data.blacklist.is_flagged) {
+        badgeWatch.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#fef2f2; color:#dc2626; font-size:0.65rem;">ALERT</span>';
+      } else {
+        badgeWatch.innerHTML = '<span class="badge-pill-soft ms-1" style="background:#f0fdf4; color:#16a34a; font-size:0.65rem;">Clear</span>';
+      }
+
+      // 4. Document & VIZ Preview
+      const previewImg = document.getElementById("docPreviewImg");
+      const placeholder = document.getElementById("docPreviewPlaceholder");
+      if (data.doc_filename) {
+        previewImg.src = `/media/${data.doc_filename}?t=${Date.now()}`;
+        previewImg.style.display = "block";
+        placeholder.style.display = "none";
+      }
+      const vizTable = document.getElementById("vizFieldsTable");
+      vizTable.innerHTML = "";
+
+      const VIZ_LABELS = {
+        passport_number:   "Passport No.",
+        document_number:   "Document No.",
+        aadhaar_number:    "Aadhaar No. (UID)",
+        pan_number:        "PAN No.",
+        visa_number:       "Visa No.",
+        surname:           "Surname",
+        given_names:       "Given Names",
+        full_name:         "Full Name",
+        nationality:       "Nationality",
+        country_code:      "Country Code",
+        dob:               "Date of Birth",
+        date_of_birth:     "Date of Birth",
+        sex:               "Sex",
+        gender:            "Gender",
+        expiry_date:       "Expiry Date",
+        issue_date:        "Date of Issue",
+        valid_from:        "Valid From",
+        valid_until:       "Valid Until",
+        place_of_birth:    "Place of Birth",
+        place_of_issue:    "Place of Issue",
+        visa_type:         "Visa Category",
+        entries:           "Entries Allowed",
+        file_number:       "File No.",
+        stay_duration:     "Stay Duration",
+        stay_duration_days:"Stay Duration (Days)",
+        verhoeff_valid:    "UIDAI Verhoeff Checksum",
+      };
+      const SKIP_FIELDS = new Set(["id_number", "raw_dob_str", "stay_duration", "document_type", "issuing_country", "dob_str", "expiry_str", "optional_data"]);
+
+      if (data.ocr && data.ocr.fields && Object.keys(data.ocr.fields).length > 0) {
+        const conf = data.ocr.ocr_confidence != null ? Math.round(data.ocr.ocr_confidence * 100) : null;
+        if (conf !== null) {
+          const confColor = conf >= 80 ? 'success' : conf >= 50 ? 'warning' : 'secondary';
+          vizTable.innerHTML += `<tr><td colspan="2" class="pb-2" style="border:none; background:transparent;"><span class="badge-pill-soft" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;"><i class="fa-solid fa-microscope me-1"></i>OCR Extraction Confidence: ${conf}%</span></td></tr>`;
+        }
+        for (const [k, v] of Object.entries(data.ocr.fields)) {
+          if (SKIP_FIELDS.has(k)) continue;
+          if (v === "" || v === null || v === undefined) continue;
+          const label = VIZ_LABELS[k] || k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          let displayVal = String(v);
+          if (displayVal.match(/^\d{4}-\d{2}-\d{2}/)) {
+            try { displayVal = new Date(displayVal).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}); } catch(e){}
+          } else if (k === "verhoeff_valid") {
+            displayVal = v ? '<span class="badge-pill-soft" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;">VALID UIDAI CHECKSUM</span>' : '<span class="badge-pill-soft" style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca;">INVALID CHECKSUM</span>';
+          }
+          vizTable.innerHTML += `<tr><th>${label}</th><td>${displayVal}</td></tr>`;
+        }
+      } else {
+        vizTable.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-muted" style="border:none; background:transparent;"><i class="fa-solid fa-triangle-exclamation me-1 text-warning"></i>Could not extract visual fields. Try uploading a clearer, well-lit scan of the document.</td></tr>`;
+      }
+
+      // 5. Database Comparison Tab
+      const dbBox = document.getElementById("dbMatchDetailsBox");
+      if (data.database && data.database.record_found) {
+        let dbHtml = `<div class="fw-bold mb-2 text-success"><i class="fa-solid fa-circle-check me-2"></i>Record Found in National Registry (Status: ${data.database.status_in_db})</div>`;
+        if (data.database.db_record) {
+          dbHtml += `<table class="table-viz-clean mb-2">
+            <tr><th>Database Name</th><td>${data.database.db_record.full_name || ''}</td></tr>
+            <tr><th>Database DOB</th><td>${data.database.db_record.dob || ''}</td></tr>
+            <tr><th>Database Expiry</th><td>${data.database.db_record.expiry_date || ''}</td></tr>
+            <tr><th>Status</th><td><span class="badge-pill-soft" style="background:${data.database.is_active ? '#f0fdf4' : '#fef2f2'}; color:${data.database.is_active ? '#16a34a' : '#dc2626'};">${data.database.status_in_db}</span></td></tr>
+          </table>`;
+        }
+        if (data.database.discrepancies && data.database.discrepancies.length > 0) {
+          dbHtml += `<div class="text-danger fw-bold small mt-2">Discrepancies:</div>` + data.database.discrepancies.map(d => `<div class="small text-danger">• ${d}</div>`).join("");
+        }
+        dbBox.innerHTML = dbHtml;
+      } else {
+        dbBox.innerHTML = `<div class="fw-bold text-warning"><i class="fa-solid fa-triangle-exclamation me-2"></i>Unregistered / Ad-hoc Document:</div><div class="small text-muted mt-1">This document number is not in the local sample database. You can register it using the "Register Record" button on top.</div>`;
+      }
+
+      // 6. PKI & Digital Signature Tab
+      const pkiBox = document.getElementById("pkiDetailsBox");
+      if (data.pki) {
+        pkiBox.innerHTML = `
+          <div class="mb-2"><strong>CSCA Root Authority:</strong> <span class="badge-pill-soft" style="background:#f1f5f9; color:#475569;">${data.pki.csca_root}</span></div>
+          <div class="mb-2"><strong>Digital Security Status:</strong> <span class="badge-pill-soft" style="background:${data.pki.signature_verified ? '#f0fdf4' : '#eff6ff'}; color:${data.pki.signature_verified ? '#16a34a' : '#2563eb'};">${data.pki.pki_status}</span></div>
+          <div class="small text-muted">Passive authentication verified against National Document Signer Certificate (ICAO Doc 9303 Part 10/11/12).</div>
+        `;
+      }
+
+      // 7. MRZ Tab
+      const mrzBox = document.getElementById("mrzLinesBox");
+      if (data.ocr && data.ocr.mrz_lines && data.ocr.mrz_lines.length > 0) {
+        mrzBox.innerHTML = data.ocr.mrz_lines.map(l => `<div>${l}</div>`).join("");
+      } else {
+        mrzBox.innerHTML = "-- NO MRZ DETECTED (Visual ID / Card Document Format) --";
+      }
+      const mrzValBox = document.getElementById("mrzValidationBox");
+      if (data.ocr && data.ocr.mrz_lines && data.ocr.mrz_lines.length > 0) {
+        if (isMrzTampered) {
+          const discList = (data.cross_check && data.cross_check.discrepancies && data.cross_check.discrepancies.length > 0)
+            ? data.cross_check.discrepancies.map(d => `<li class="mt-1"><strong>${d}</strong></li>`).join("")
+            : '<li>MRZ identity data does not match the printed Visual Zone (VIZ).</li>';
+          mrzValBox.innerHTML = `
+            <div class="alert alert-danger d-flex align-items-start gap-3 mb-3 p-3" style="background:#fef2f2; border:1.5px solid #f87171; border-radius:10px; color:#991b1b;">
+              <i class="fa-solid fa-triangle-exclamation fs-3 text-danger mt-1"></i>
+              <div>
+                <h6 class="fw-bold mb-1 text-danger"><i class="fa-solid fa-ban me-1"></i>CRITICAL FORGERY DETECTED: MRZ SWAPPED / TAMPERED</h6>
+                <div class="mb-2" style="font-size:0.85rem; color:#7f1d1d;">
+                  This MRZ strip has been <strong>harvested from another person's document</strong>. While its internal 7-3-1 Modulus 10 check digits are mathematically valid (because it came from another genuine passport), it <strong>strictly contradicts the printed Visual Inspection Zone (VIZ)</strong> of this document.
+                </div>
+                <div class="fw-bold text-dark mb-1" style="font-size:0.82rem;">Detected Mismatches between Visual Zone and MRZ:</div>
+                <ul class="mb-0 ps-3" style="font-size:0.82rem; color:#991b1b;">
+                  ${discList}
+                </ul>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <span class="badge-pill-soft" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;"><i class="fa-solid fa-xmark me-1"></i>VIZ vs MRZ Cross-Check: FORGERY DETECTED</span>
+              <span class="badge-pill-soft" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;"><i class="fa-solid fa-xmark me-1"></i>Document Integrity: COMPROMISED / REJECTED</span>
+              <span class="badge-pill-soft" style="background:#fef3c7; color:#d97706; border:1px solid #fde68a;"><i class="fa-solid fa-info-circle me-1"></i>Harvested Strip Checksum: 7-3-1 Math OK</span>
+            </div>
+          `;
+        } else if (data.ocr.mrz_all_ok) {
+          mrzValBox.innerHTML = `
+            <div class="fw-bold mb-2 text-success"><i class="fa-solid fa-circle-check me-2"></i>All ICAO Doc 9303 Check Digits Verified Correct (7-3-1 Modulus 10).</div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <span class="badge-pill-soft" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-check me-1"></i>Doc Number Checksum: VALID</span>
+              <span class="badge-pill-soft" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-check me-1"></i>DOB Checksum: VALID</span>
+              <span class="badge-pill-soft" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-check me-1"></i>Expiry Checksum: VALID</span>
+              <span class="badge-pill-soft" style="background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;"><i class="fa-solid fa-check me-1"></i>Composite Checksum: VALID</span>
+            </div>
+          `;
+        } else {
+          mrzValBox.innerHTML = '<div class="text-danger fw-bold mb-2"><i class="fa-solid fa-circle-xmark me-2"></i>MRZ Checksum Failures Detected:</div>' +
+            (data.ocr.mrz_failures || []).map(f => `<div class="badge-pill-soft me-1" style="background:#fee2e2; color:#dc2626;">${f}</div>`).join(" ");
+        }
+      } else {
+        mrzValBox.innerHTML = '<div class="small text-muted">Standard card or non-MRZ document format (e.g. Aadhaar Card / PAN Card).</div>';
+      }
+
+      // 8. Tampering Forensics Tab
+      const tamperBadge = document.getElementById("tamperStatusBadge");
+      if (data.tampering && data.tampering.is_tampered) {
+        tamperBadge.style = "background:#fee2e2; color:#dc2626; border:1px solid #fecaca;";
+        tamperBadge.innerText = "TAMPERING DETECTED";
+      } else {
+        tamperBadge.style = "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;";
+        tamperBadge.innerText = "CLEAN / NO TAMPERING";
+      }
+
+      const heatmaps = (data.tampering && data.tampering.heatmaps) || {};
+      if (heatmaps.ela) document.getElementById("heatmapEla").src = `/media/${heatmaps.ela}?t=${Date.now()}`;
+      if (heatmaps.variance) document.getElementById("heatmapVariance").src = `/media/${heatmaps.variance}?t=${Date.now()}`;
+      if (heatmaps.photo_splice) document.getElementById("heatmapSplice").src = `/media/${heatmaps.photo_splice}?t=${Date.now()}`;
+      
+      const stampImg = document.getElementById("heatmapStamp");
+      const stampCol = stampImg ? stampImg.closest('.col-md-3') : null;
+      if (heatmaps.stamp) {
+        stampImg.src = `/media/${heatmaps.stamp}?t=${Date.now()}`;
+        if (stampCol) stampCol.style.display = "block";
+      } else {
+        stampImg.src = "";
+        if (stampCol) stampCol.style.display = "none";
+      }
+
+      const tamperDetails = document.getElementById("tamperDetailsBox");
+      if (data.tampering && data.tampering.reasons && data.tampering.reasons.length > 0) {
+        tamperDetails.innerHTML = '<div class="text-warning fw-bold mb-1">Forensic Anomalies:</div>' +
+          data.tampering.reasons.map(r => `<div class="small text-danger">• ${r}</div>`).join("");
+      } else {
+        tamperDetails.innerHTML = '<div class="small text-success"><i class="fa-solid fa-check me-1"></i> No solid-fill patches, compression anomalies, or border splice seams detected on raw pixels.</div>';
+      }
+
+      // 9. Face Biometrics Tab
+      if (data.doc_filename) document.getElementById("faceDocImg").src = `/media/${data.doc_filename}?t=${Date.now()}`;
+      if (data.live_filename) {
+        document.getElementById("faceLiveImg").src = `/media/${data.live_filename}?t=${Date.now()}`;
+      } else {
+        document.getElementById("faceLiveImg").src = "";
+      }
+
+      const matchScore = (data.face && data.face.similarity_score) ? (data.face.similarity_score * 100).toFixed(1) : "0.0";
+      document.getElementById("faceMatchScore").innerText = data.face && data.face.live_provided ? `${matchScore}%` : "N/A";
+      const matchBadge = document.getElementById("faceMatchBadge");
+      const engineBadge = document.getElementById("faceEngineBadge");
+      if (data.face && data.face.live_provided) {
+        if (data.face.matched) {
+          matchBadge.style = "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;";
+          matchBadge.innerText = "BIOMETRIC MATCH";
+        } else {
+          matchBadge.style = "background:#fef2f2; color:#dc2626; border:1px solid #fecaca;";
+          matchBadge.innerText = "MISMATCH — DIFFERENT PERSON";
+        }
+        if (engineBadge) {
+          const eng = data.face.engine_used || "unknown";
+          const isSface = eng.includes("sface");
+          engineBadge.style = isSface ? "background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;" : "background:#fffbeb; color:#d97706; border:1px solid #fde68a;";
+          engineBadge.innerText = isSface ? "SFace Neural Engine" : "Histogram Fallback";
+        }
+      } else {
+        matchBadge.style = "background:#f1f5f9; color:#64748b;";
+        matchBadge.innerText = "DOCUMENT INSPECTION ONLY";
+        if (engineBadge) engineBadge.innerText = "";
+      }
+
+      const galBox = document.getElementById("galleryAlertBox");
+      if (data.gallery && data.gallery.multi_identity_flag) {
+        galBox.innerHTML = `<div class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> IMPERSONATION DETECTED:</div><div class="small text-danger">${data.gallery.alert_message}</div>`;
+      } else {
+        galBox.innerHTML = '<div class="small text-success"><i class="fa-solid fa-circle-check me-1"></i> No duplicate identity or facial conflict found in gallery.</div>';
+      }
+
+      // 10. Watchlist Tab
+      const watchBox = document.getElementById("watchlistContentBox");
+      if (data.blacklist && data.blacklist.is_flagged) {
+        watchBox.innerHTML = `<div class="text-danger fw-bold"><i class="fa-solid fa-ban me-2"></i> CRITICAL WATCHLIST HIT:</div><div class="text-danger small mt-1">${data.blacklist.summary}</div>`;
+      } else {
+        watchBox.innerHTML = '<div class="text-success"><i class="fa-solid fa-check-circle me-2"></i> Document and Traveler Name CLEAR of all Indian BOI, CBI & Interpol watchlists.</div>';
+      }
+    }
+
+    // =========================================================================
+    // PROGRESSIVE WEB APP (PWA) SERVICE WORKER & INSTALLATION MANAGER
+    // =========================================================================
+    let deferredPwaPrompt = null;
+    const btnInstallPwa = document.getElementById("btnInstallPwa");
+    const pwaBanner = document.getElementById("pwaInstallBanner");
+    const btnPwaBannerInstall = document.getElementById("btnPwaBannerInstall");
+    const btnPwaBannerDismiss = document.getElementById("btnPwaBannerDismiss");
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('[PWA] Service Worker registered with scope:', reg.scope))
+          .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      if (btnInstallPwa) btnInstallPwa.style.display = 'inline-flex';
+      if (pwaBanner && !sessionStorage.getItem('pwaPromptDismissed')) {
+        pwaBanner.style.display = 'flex';
+      }
+    });
+
+    async function triggerPwaInstallFlow() {
+      if (!deferredPwaPrompt) return;
+      deferredPwaPrompt.prompt();
+      const { outcome } = await deferredPwaPrompt.userChoice;
+      console.log('[PWA] User response to installation prompt:', outcome);
+      deferredPwaPrompt = null;
+      if (btnInstallPwa) btnInstallPwa.style.display = 'none';
+      if (pwaBanner) pwaBanner.style.display = 'none';
+    }
+
+    if (btnInstallPwa) btnInstallPwa.addEventListener('click', triggerPwaInstallFlow);
+    if (btnPwaBannerInstall) btnPwaBannerInstall.addEventListener('click', triggerPwaInstallFlow);
+    if (btnPwaBannerDismiss) {
+      btnPwaBannerDismiss.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.style.display = 'none';
+        sessionStorage.setItem('pwaPromptDismissed', 'true');
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] DocScreen AI successfully installed on user device!');
+      if (btnInstallPwa) btnInstallPwa.style.display = 'none';
+      if (pwaBanner) pwaBanner.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

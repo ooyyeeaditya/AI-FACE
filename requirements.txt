@@ -1,0 +1,17 @@
+# AI-Based Fake Identity & Document Screening System
+# Core Requirements
+
+# Image Processing & Computer Vision
+Pillow>=9.0.0
+numpy>=1.20.0
+scipy>=1.7.0
+opencv-python>=4.5.0
+
+# OCR (Optional external engine wrapper)
+pytesseract>=0.3.8
+
+# Web Kiosk Dashboard & API
+Flask>=2.0.0
+
+# Testing & Quality Assurance
+pytest>=7.0.0
