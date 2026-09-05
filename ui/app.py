@@ -299,6 +299,9 @@ def create_app():
     return app
 
 
+# WSGI / Serverless Application Instance
+app = create_app()
+application = app
+
 if __name__ == "__main__":
-    application = create_app()
-    application.run(host="0.0.0.0", port=5050, debug=True)
+    app.run(host="0.0.0.0", port=5050, debug=True)
