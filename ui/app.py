@@ -39,10 +39,38 @@ from run_pipeline import (
     OUT_DIR,
 )
 
+import tempfile
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-UPLOAD_DIR = OUT_DIR / "uploads"
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-init_database()
+
+def _get_writable_upload_dir() -> Path:
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        p = Path(tempfile.gettempdir()) / "facesih_uploads"
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+    candidates = [
+        OUT_DIR / "uploads",
+        Path(tempfile.gettempdir()) / "facesih_uploads",
+    ]
+    for c in candidates:
+        try:
+            c.mkdir(parents=True, exist_ok=True)
+            test_file = c / ".test_write"
+            test_file.touch()
+            test_file.unlink(missing_ok=True)
+            return c
+        except Exception:
+            continue
+    fallback = Path(tempfile.gettempdir()) / "facesih_uploads"
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback
+
+UPLOAD_DIR = _get_writable_upload_dir()
+
+try:
+    init_database()
+except Exception:
+    pass
 
 DEMO_SUITE = {}
 
@@ -58,7 +86,10 @@ def create_app():
 
     global DEMO_SUITE
     if not DEMO_SUITE:
-        DEMO_SUITE = generate_all_demo_specimens()
+        try:
+            DEMO_SUITE = generate_all_demo_specimens()
+        except Exception as e:
+            DEMO_SUITE = {}
 
     @app.route("/")
     def index():

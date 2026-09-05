@@ -19,11 +19,32 @@ from datetime import datetime, date
 from typing import Dict, Any, Optional, List, Tuple
 import hashlib
 
-DB_PATH = Path(__file__).resolve().parent.parent.parent / "border_control.db"
+import os
+import tempfile
+
+def _get_writable_db_path() -> Path:
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        return Path(tempfile.gettempdir()) / "border_control.db"
+    default_p = Path(__file__).resolve().parent.parent.parent / "border_control.db"
+    try:
+        # Test if directory is writable
+        parent = default_p.parent
+        if not os.access(str(parent), os.W_OK):
+            return Path(tempfile.gettempdir()) / "border_control.db"
+        return default_p
+    except Exception:
+        return Path(tempfile.gettempdir()) / "border_control.db"
+
+DB_PATH = _get_writable_db_path()
 
 
 def get_db_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(str(DB_PATH))
+    global DB_PATH
+    try:
+        conn = sqlite3.connect(str(DB_PATH))
+    except (sqlite3.OperationalError, PermissionError):
+        DB_PATH = Path(tempfile.gettempdir()) / "border_control.db"
+        conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 

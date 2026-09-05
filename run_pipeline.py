@@ -55,9 +55,36 @@ from generators.fraud_synthesizer import (
     generate_tampered_aadhaar,
 )
 
-OUT_DIR = Path(__file__).resolve().parent / "output"
-OUT_DIR.mkdir(parents=True, exist_ok=True)
-init_database()
+import tempfile
+
+def _get_writable_out_dir() -> Path:
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        p = Path(tempfile.gettempdir()) / "facesih_output"
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+    candidates = [
+        Path(__file__).resolve().parent / "output",
+        Path(tempfile.gettempdir()) / "facesih_output",
+    ]
+    for c in candidates:
+        try:
+            c.mkdir(parents=True, exist_ok=True)
+            test_file = c / ".test_write"
+            test_file.touch()
+            test_file.unlink(missing_ok=True)
+            return c
+        except Exception:
+            continue
+    fallback = Path(tempfile.gettempdir()) / "facesih_output"
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback
+
+OUT_DIR = _get_writable_out_dir()
+
+try:
+    init_database()
+except Exception:
+    pass
 
 
 def screen_document_pipeline(
