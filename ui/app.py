@@ -108,6 +108,8 @@ def create_app():
             DEMO_SUITE = {}
 
     @app.route("/")
+    @app.route("/api")
+    @app.route("/api/index")
     def index():
         return render_template("index.html")
 
@@ -123,6 +125,7 @@ def create_app():
         return send_from_directory(static_dir, "manifest.json", mimetype="application/manifest+json")
 
     @app.route("/api/specimens", methods=["GET"])
+    @app.route("/specimens", methods=["GET"])
     def list_specimens():
         global DEMO_SUITE
         if not DEMO_SUITE:
@@ -138,6 +141,7 @@ def create_app():
         return jsonify({"specimens": items})
 
     @app.route("/api/upload_and_screen", methods=["POST"])
+    @app.route("/upload_and_screen", methods=["POST"])
     def upload_and_screen():
         doc_file = request.files.get("doc_file")
         live_file = request.files.get("live_file")
