@@ -1,13 +1,26 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index"
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "core/**",
+          "ui/**",
+          "generators/**",
+          "run_pipeline.py",
+          "variance_forensics.py",
+          "generate_specimen.py",
+          "requirements.txt"
+        ]
+      }
     }
   ],
-  "functions": {
-    "api/index.py": {
-      "includeFiles": "{core/**,ui/**,generators/**,*.py}"
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
     }
-  }
+  ]
 }
