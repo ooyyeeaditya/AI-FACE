@@ -113,14 +113,14 @@ def create_app():
 
     @app.route("/sw.js")
     def service_worker():
-        response = send_from_directory(str(BASE_DIR / "ui" / "static"), "sw.js")
+        response = send_from_directory(static_dir, "sw.js")
         response.headers["Content-Type"] = "application/javascript"
         response.headers["Service-Worker-Allowed"] = "/"
         return response
 
     @app.route("/manifest.json")
     def manifest():
-        return send_from_directory(str(BASE_DIR / "ui" / "static"), "manifest.json", mimetype="application/manifest+json")
+        return send_from_directory(static_dir, "manifest.json", mimetype="application/manifest+json")
 
     @app.route("/api/specimens", methods=["GET"])
     def list_specimens():
