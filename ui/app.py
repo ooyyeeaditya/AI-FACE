@@ -347,6 +347,13 @@ def create_app():
     def get_media(filename):
         return send_from_directory(str(OUT_DIR), filename)
 
+    @app.errorhandler(404)
+    def handle_404(e):
+        path = request.path
+        if path.startswith("/api/") or path.startswith("/specimens") or path.startswith("/upload_and_screen"):
+            return jsonify({"error": "API route not found", "path": path}), 404
+        return render_template("index.html")
+
     return app
 
 
