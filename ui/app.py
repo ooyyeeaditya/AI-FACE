@@ -76,10 +76,26 @@ DEMO_SUITE = {}
 
 
 def create_app():
+    tpl_candidates = [
+        BASE_DIR / "ui" / "templates",
+        Path(__file__).resolve().parent / "templates",
+        Path.cwd() / "ui" / "templates",
+        Path("/var/task/ui/templates"),
+    ]
+    tpl_dir = next((str(p) for p in tpl_candidates if p.exists()), str(BASE_DIR / "ui" / "templates"))
+
+    static_candidates = [
+        BASE_DIR / "ui" / "static",
+        Path(__file__).resolve().parent / "static",
+        Path.cwd() / "ui" / "static",
+        Path("/var/task/ui/static"),
+    ]
+    static_dir = next((str(p) for p in static_candidates if p.exists()), str(BASE_DIR / "ui" / "static"))
+
     app = Flask(
         __name__,
-        template_folder=str(BASE_DIR / "ui" / "templates"),
-        static_folder=str(BASE_DIR / "ui" / "static"),
+        template_folder=tpl_dir,
+        static_folder=static_dir,
     )
     app.config["UPLOAD_FOLDER"] = str(UPLOAD_DIR)
     app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024  # 32MB max

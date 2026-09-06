@@ -14,4 +14,5 @@ pytesseract>=0.3.8
 Flask>=2.0.0
 
 # Testing & Quality Assurance
-pytest>=7.0.0
+# pytest (dev only)
+
